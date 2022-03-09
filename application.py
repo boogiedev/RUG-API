@@ -2,17 +2,17 @@ import os
 from os.path import exists
 import pandas as pd
 from process import calculate
-from flask import Flask, Response, jsonify, request, render_template
+from flask import Flask, Response, jsonify, request
 import requests
 
 
 application = Flask(__name__)
 
 VERSION = 0
-API_ROUTE = f'/api/v{VERSION}'
+API_ROUTE = f"/api/v{VERSION}"
 
 "Helpers"
-def get_data(n_results:int=5000):
+def get_data(n_results: int = 5000):
     """
     Route requests data from RUG API and stores processed data (persists until new call)
     """
@@ -26,7 +26,7 @@ def get_data(n_results:int=5000):
 # Before Request Wrapper
 @application.before_request
 def create_data():
-    path = 'data.pkl'
+    path = "data.pkl"
     file_exists = exists(path)
     global DATA
     if not file_exists:
@@ -34,38 +34,53 @@ def create_data():
         DATA.to_pickle(path)
     else:
         DATA = pd.read_pickle(path)
+
+
 # Reset Data
-@application.route(API_ROUTE + '/reset_data')
+@application.route(API_ROUTE + "/reset_data")
 def reset_data():
     """
     Resets pickled data
     """
-    path = 'data.pkl'
+    path = "data.pkl"
     file_exists = exists(path)
     if file_exists:
         os.remove(path)
-    return 'data reset'
+    temp = f"""
+    <div>
+        <h2> Data Reset </h2>
+        <h4> Endpoints: </h4>
+        <a href="/api/v0/view_data"><p> View Data </p></a>
+        <a href="/api/v0/get_statistics"><p> Get Statistics </p></a>
+    </div>
+    """
+    return temp
+
 
 "Routes"
 # View for data as HTML
-@application.route('/')
+@application.route("/")
 def home():
     """
     Home Page
     """
-    base_uri = '/api/v0/'
-    endpoints = ['view_data', 'get_statistics']
+    base_uri = "/api/v0/"
+    endpoints = ["view_data", "get_statistics", "reset_data"]
     temp = f"""
     <div>
         <h1> RUG API </h1>
         <p> Access API via {base_uri} </p>
         <p> Endpoints: {", ".join(endpoints)} </p>
+        <a href="/api/v0/view_data"><p> View Data </p></a>
+        <a href="/api/v0/reset_data"><p> Reset Data </p></a>
+        <a href="/api/v0/get_statistics"><p> Get Statistics </p></a>
     </div>
     """
     return temp
 
+
 # View for data as HTML
-@application.route(API_ROUTE + '/view_data')
+@application.route(API_ROUTE + "/view_data")
 def view_data():
     """
     Retrieves previous RUG API request and displays cleaned data for verification
@@ -73,8 +88,9 @@ def view_data():
     # Retrieve DF Data
     return DATA.to_html()
 
+
 # Route to get stats in different formats
-@application.route(API_ROUTE + '/get_statistics')
+@application.route(API_ROUTE + "/get_statistics")
 def get_statistics():
     """
     Returns statistics generated from data in user specified format (default=json)
@@ -82,15 +98,14 @@ def get_statistics():
     # Generate Stats from Saved DF
     stats = calculate.generate_statistics(DATA)
     # Retrieve ACCEPT
-    accept = request.headers.get('Accept')
+    accept = request.headers.get("Accept")
     print(accept)
     "application/json"
     "text/xml"
     "text/plain"
-    "406" # Does not support any other type for accept header
-    return data
+    "406"  # Does not support any other type for accept header
+    return 'stats'
 
 
-
-if __name__ == '__main__':
+if __name__ == "__main__":
     application.run(debug=True)

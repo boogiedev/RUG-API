@@ -24,7 +24,7 @@ Scope of the data was interpreted to only include UTF-8 names and all locations 
 ### Steps
 
 - [X] 1: Determine technologies/production stack needed for application
-  - Flask, Gunicorn (WSGI), AWS Elastic Beanstalk & CodePipeline, Pandas (Data Processing)
+  - Flask, Gunicorn (WSGI), AWS Elastic Beanstalk & CodePipeline, Pandas (Data Processing), Black (Linter)
 - [X] 2: Flesh out web service (figure out the endpoint(s))
   - Final endpoint - /get_statistics
   - Before requests, check if there is current (cleaned) data resource
@@ -38,16 +38,16 @@ Scope of the data was interpreted to only include UTF-8 names and all locations 
       - text/plain
       - 406 Error for non compatible header
 - [X] 4: Deploy (hopefully with CI/CD tools)
-  - Elastic Beanstalk connected to repo
+  - Elastic Beanstalk connected to repo via CodePipeline
 
 
 ### Features
 
 - Routes/Endpoints "/api/v0" {params}
-  - [ ] fill_data {n_results} [GET] (Internal Endpoint, REFACTORED out of VIEW)
-  - [ ] view_data [GET]
-  - [ ] get_statistics {format} [GET]
-  - [ ] view_statistics [GET]
+  - [X] fill_data {n_results} [GET] (Internal Endpoint, REFACTORED out of VIEW)
+  - [X] view_data [GET]
+  - [X] reset_data [GET]
+  - [X] get_statistics {format} [GET]
 
 ---
 
