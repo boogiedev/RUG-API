@@ -56,11 +56,13 @@ def home():
     base_uri = '/api/v0/'
     endpoints = ['view_data', 'get_statistics']
     temp = f"""
-<h1> RUG API <h1>
-<p> Access API via {base_uri} <p>
-<p> Endpoints: {", ".join(endpoints)} <p>
+    <div>
+        <h1> RUG API </h1>
+        <p> Access API via {base_uri} </p>
+        <p> Endpoints: {", ".join(endpoints)} </p>
+    </div>
     """
-    return render_template(temp)
+    return temp
 
 # View for data as HTML
 @application.route(API_ROUTE + '/view_data')
