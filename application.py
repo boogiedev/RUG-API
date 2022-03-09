@@ -2,7 +2,7 @@ import os
 from os.path import exists
 import pandas as pd
 from process import calculate
-from flask import Flask, Response, jsonify, request
+from flask import Flask, Response, jsonify, request, render_template
 import requests
 
 
@@ -11,6 +11,7 @@ application = Flask(__name__)
 VERSION = 0
 API_ROUTE = f'/api/v{VERSION}'
 
+"Helpers"
 def get_data(n_results:int=5000):
     """
     Route requests data from RUG API and stores processed data (persists until new call)
@@ -20,6 +21,8 @@ def get_data(n_results:int=5000):
     data = calculate.convert_data(response.json())
     return data
 
+
+"Internal"
 # Before Request Wrapper
 @application.before_request
 def create_data():
@@ -42,6 +45,22 @@ def reset_data():
     if file_exists:
         os.remove(path)
     return 'data reset'
+
+"Routes"
+# View for data as HTML
+@application.route('/')
+def home():
+    """
+    Home Page
+    """
+    base_uri = '/api/v0/'
+    endpoints = ['view_data', 'get_statistics']
+    temp = f"""
+<h1> RUG API <h1>
+<p> Access API via {base_uri} <p>
+<p> Endpoints: {", ".join(endpoints)} <p>
+    """
+    return render_template(temp)
 
 # View for data as HTML
 @application.route(API_ROUTE + '/view_data')
