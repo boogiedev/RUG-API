@@ -53,4 +53,4 @@ Scope of the data was interpreted to only include UTF-8 names and all locations 
 
 ## Usage
 
-Show example usage
+URL: http://rugapi-env.eba-3njfpb43.us-west-2.elasticbeanstalk.com
