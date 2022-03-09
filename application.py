@@ -1,8 +1,10 @@
+from dict2xml import dict2xml
 import os
 from os.path import exists
 import pandas as pd
 from process import calculate
-from flask import Flask, Response, jsonify, request
+import json
+from flask import abort, Flask, Response, jsonify, request
 import requests
 
 
@@ -95,16 +97,24 @@ def get_statistics():
     """
     Returns statistics generated from data in user specified format (default=json)
     """
+    # NOTE: Better to use decorators here for each mime-type but in lieu of time, doing hard match
     # Generate Stats from Saved DF
     stats = calculate.generate_statistics(DATA)
+    print(stats)
     # Retrieve ACCEPT
     accept = request.headers.get("Accept")
     print(accept)
-    "application/json"
-    "text/xml"
-    "text/plain"
-    "406"  # Does not support any other type for accept header
-    return 'stats'
+    res = None
+    if "application/json" in accept:
+        res = json.dumps(stats, indent=4)
+    elif ("text/xml" in accept) or ('application/xml' in accept):
+        res = dict2xml(stats, wrap ='root', indent ="   ")
+        print(res)
+    elif "text/plain" in accept:
+        res = 'plain'
+    else: # 406
+        abort(406)
+    return res
 
 
 if __name__ == "__main__":
