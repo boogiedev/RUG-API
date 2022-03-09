@@ -24,7 +24,7 @@ Scope of the data was interpreted to only include UTF-8 names and all locations 
 ### Steps
 
 - [X] 1: Determine technologies/production stack needed for application
-  - Flask, Gunicorn (WSGI), AWS Elastic Beanstalk, Pandas (Data Processing)
+  - Flask, Gunicorn (WSGI), AWS Elastic Beanstalk & CodePipeline, Pandas (Data Processing)
 - [X] 2: Flesh out web service (figure out the endpoint(s))
   - Final endpoint - /get_statistics
   - Before requests, check if there is current (cleaned) data resource
