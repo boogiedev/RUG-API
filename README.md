@@ -1,5 +1,5 @@
 # RUG-API
-Random User Generator(RUG) Statistics API
+Random User Generator(RUG) Statistics API (3 Hours Start to Finish)
 
 ## Table of Contents
 
